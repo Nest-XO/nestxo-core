@@ -20,8 +20,13 @@ import 'dotenv/config';
 import path from 'path';
 import { DataSourceOptions } from 'typeorm';
 import { ReviewsPlugin } from './test-plugins/reviews/reviews-plugin';
+import { compileUiExtensions, setBranding } from '@vendure/ui-devkit/compiler';
+import { TenantPlugin } from "./plugins/tenant/tenant.plugin";
+import { Tenant } from "./plugins/tenant/tenant.entity";
 
 const IS_INSTRUMENTED = process.env.IS_INSTRUMENTED === 'true';
+const IS_DEV = process.env.APP_ENV === "dev";
+const serverPort = API_PORT;
 
 /**
  * Config settings used during development
@@ -73,7 +78,21 @@ export const devConfig: VendureConfig = {
             },
         ],
     },
-    customFields: {},
+    customFields: {
+        Channel: [
+            {
+                name: "tenant",
+                type: "relation",
+                entity: Tenant,
+                eager: true,
+                nullable: true,
+                public: false,
+                ui: {
+                    component: 'tenant-select-input',
+                },
+            },
+        ],
+    },
     logger: new DefaultLogger({ level: LogLevel.Verbose }),
     importExportOptions: {
         importAssetsDir: path.join(__dirname, 'import-assets'),
@@ -83,6 +102,7 @@ export const devConfig: VendureConfig = {
         //     platformFeePercent: 10,
         //     platformFeeSKU: 'FEE',
         // }),
+        TenantPlugin,
         ReviewsPlugin,
         GraphiqlPlugin.init(),
         AssetServerPlugin.init({
@@ -117,7 +137,21 @@ export const devConfig: VendureConfig = {
             route: 'admin',
             port: 5001,
             compatibilityMode: true,
-            adminUiConfig: {},
+            adminUiConfig: {
+                apiPort: serverPort,
+            },
+            app: compileUiExtensions({
+                outputPath: path.join(__dirname, './custom-admin-ui'),
+                extensions: [
+                     setBranding({
+                        smallLogoPath: path.join(__dirname, './images/nestxo-logo-black.png'),
+                        largeLogoPath: path.join(__dirname, './images/nestxo-logo-black.png'),
+                        faviconPath: path.join(__dirname, './images/nestxoIcon.png'),
+                    }),
+                    TenantPlugin.ui
+                ],
+                // devMode: IS_DEV,
+            }),
             // Un-comment to compile a custom admin ui
             // app: compileUiExtensions({
             //     outputPath: path.join(__dirname, './custom-admin-ui'),
