@@ -18,6 +18,7 @@ import { MainNavComponent } from './components/main-nav/main-nav.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { OverlayHostComponent } from './components/overlay-host/overlay-host.component';
 import { SettingsNavComponent } from './components/settings-nav/settings-nav.component';
+import { TenantSwitcherComponent } from './components/tenant-switcher/tenant-switcher.component';
 import { ThemeSwitcherComponent } from './components/theme-switcher/theme-switcher.component';
 import { UiLanguageSwitcherDialogComponent } from './components/ui-language-switcher-dialog/ui-language-switcher-dialog.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
@@ -60,6 +61,7 @@ import { SharedModule } from './shared/shared.module';
         NotificationComponent,
         UiLanguageSwitcherDialogComponent,
         ChannelSwitcherComponent,
+        TenantSwitcherComponent,
         ThemeSwitcherComponent,
         AlertsComponent,
     ],

@@ -1,0 +1,26 @@
+<ng-container>
+    <vdr-dropdown>
+        <button class="active-tenant m-auto" vdrDropdownTrigger>
+            <span class="tenant-label">{{ activeTenantCode$ | async }}</span>
+            <span class="trigger"><clr-icon shape="ellipsis-vertical" size="12"></clr-icon></span>
+        </button>
+        <vdr-dropdown-menu vdrPosition="bottom-right">
+            <input
+                *ngIf="((tenantCount$ | async) || 0) >= displayFilterThreshold"
+                [formControl]="filterControl"
+                type="text"
+                class="ml2 mr2"
+                [placeholder]="'common.filter' | translate"
+            />
+            <button
+                *ngFor="let tenant of tenants$ | async"
+                type="button"
+                vdrDropdownItem
+                (click)="setActiveTenant(tenant.id)"
+            >
+                {{ tenant.code }}
+            </button>
+        </vdr-dropdown-menu>
+    </vdr-dropdown>
+</ng-container>
+
